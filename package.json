@@ -1,0 +1,25 @@
+{
+  "name": "css-auto-breakpoints",
+  "version": "1.0.0",
+  "description": "An npm module that automatically generates an App.css with breakpoints for main screen sizes",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node test.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KudahShambare/css-auto-breakpoints.git"
+  },
+  "keywords": [
+    "css",
+    "responsive-website"
+  ],
+  "author": "Kuda Shambare",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KudahShambare/css-auto-breakpoints/issues"
+  },
+  "homepage": "https://github.com/KudahShambare/css-auto-breakpoints#readme"
+}
