@@ -1,60 +1,50 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const cssBreakpoints = `
-@media (max-width: 360px) { /* Styles for screens up to 360px wide */ }
-@media (max-width: 375px) { /* Styles for screens up to 375px wide */ }
-@media (max-width: 390px) { /* Styles for screens up to 390px wide */ }
-@media (max-width: 393px) { /* Styles for screens up to 393px wide */ }
-@media (max-width: 412px) { /* Styles for screens up to 412px wide */ }
-@media (max-width: 414px) { /* Styles for screens up to 414px wide */ }
-@media (max-width: 720px) { /* Styles for screens up to 720px wide */ }
-@media (max-width: 768px) { /* Styles for screens up to 768px wide */ }
-@media (max-width: 780px) { /* Styles for screens up to 780px wide */ }
-@media (max-width: 800px) { /* Styles for screens up to 800px wide */ }
-@media (max-width: 812px) { /* Styles for screens up to 812px wide */ }
-@media (max-width: 844px) { /* Styles for screens up to 844px wide */ }
-@media (max-width: 864px) { /* Styles for screens up to 864px wide */ }
-@media (max-width: 900px) { /* Styles for screens up to 900px wide */ }
-@media (max-width: 1080px) { /* Styles for screens up to 1080px wide */ }
-@media (max-width: 1280px) { /* Styles for screens up to 1280px wide */ }
-@media (max-width: 1366px) { /* Styles for screens up to 1366px wide */ }
-@media (max-width: 1440px) { /* Styles for screens up to 1440px wide */ }
-@media (max-width: 1536px) { /* Styles for screens up to 1536px wide */ }
-@media (max-width: 1600px) { /* Styles for screens up to 1600px wide */ }
-@media (max-width: 1920px) { /* Styles for screens up to 1920px wide */ }
-@media (max-width: 2560px) { /* Styles for screens up to 2560px wide */ }
+@media (max-width: 360px) { /* Small phones (Galaxy Fold, etc.) */ }
+@media (max-width: 375px) { /* iPhone SE, iPhone 6/7/8 */ }
+@media (max-width: 390px) { /* iPhone 12/13/14 */ }
+@media (max-width: 414px) { /* iPhone 14 Pro Max, larger phones */ }
+@media (max-width: 480px) { /* Large phones / Small tablets */ }
+@media (max-width: 720px) { /* Small tablets / Large phones landscape */ }
+@media (max-width: 768px) { /* iPads / Medium tablets */ }
+@media (max-width: 1024px) { /* iPad Pro / Small laptops */ }
+@media (max-width: 1280px) { /* Laptops / Desktops */ }
+@media (max-width: 1366px) { /* Widescreen laptops */ }
+@media (max-width: 1440px) { /* High-res laptops */ }
+@media (max-width: 1536px) { /* Larger desktops */ }
+@media (max-width: 1920px) { /* Full HD screens */ }
+@media (max-width: 2560px) { /* 2K & 4K monitors */ }
+@media (max-width: 3840px) { /* 4K & 8K monitors */ }
+;
 `;
 
-export default cssBreakpoints;
+export const createBreakPoints = async (fileName, dirName = __dirname) => {
+  let resolvedPath = path.join(__dirname, dirName);
+  let output;
 
+  try {
+    // Check if the directory exists
+    const stat = await fs.promises.stat(resolvedPath);
 
-//parameters: dirName: the mame , fileName, breakpoints
- const createBreakPoints = ( fileName,dirName=__dirname) => {
+    if (stat.isDirectory()) {
+      console.log("Directory exists");
 
-    let output = "";
-    if(dirName != __dirname){
+      // Set output path for the CSS file
+      output = path.join(resolvedPath, fileName);
 
-        //validate path
-        //set path as output
-        console.log("here",dirName);
-        
-        dirName = path.basename(__dirname);
-        console.log("here",dirName);
-        
+      // Write to file
+      await fs.promises.writeFile(output, cssBreakpoints);
+      console.log("File created");
+    } else {
+      console.log("Directory does not exist");
     }
-
-    
-    //create the css file
-    output = path.join(dirName,fileName);
-    fs.writeFile(output, cssBreakpoints, (err) => {
-        if (err) throw err;
-        console.log("File created");
-    });
+  } catch (error) {
+    console.error("Error checking directory:", error);
+  }
 };
-
-module.exports = createBreakPoints;

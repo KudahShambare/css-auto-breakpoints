@@ -17,7 +17,7 @@
     "responsive-website"
   ],
   "author": "Kuda Shambare",
-  "license": "ISC",
+  "license": "LGPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/KudahShambare/css-auto-breakpoints/issues"
   },
