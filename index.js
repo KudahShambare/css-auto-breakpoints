@@ -1,9 +1,8 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import { saveAs } from "file-saver";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Check user JS runtime environment
+const isNode = typeof process !== 'undefined' && process.versions?.node;
+const isBrowser = !isNode; // If it's not Node, it's likely a browser environment
 
 const cssBreakpoints = `
 @media (max-width: 360px) { /* Small phones (Galaxy Fold, etc.) */ }
@@ -21,30 +20,25 @@ const cssBreakpoints = `
 @media (max-width: 1920px) { /* Full HD screens */ }
 @media (max-width: 2560px) { /* 2K & 4K monitors */ }
 @media (max-width: 3840px) { /* 4K & 8K monitors */ }
-;
 `;
 
-export const createBreakPoints = async (fileName, dirName = __dirname) => {
-  let resolvedPath = path.join(__dirname, dirName);
-  let output;
+export const createBreakPoints = async (fileName, dirName = window.location.pathname) => {
 
-  try {
-    // Check if the directory exists
-    const stat = await fs.promises.stat(resolvedPath);
+  const fullPath = `${dirName.replace(/\/$/, '')}/${fileName}`;
 
-    if (stat.isDirectory()) {
-      console.log("Directory exists");
-
-      // Set output path for the CSS file
-      output = path.join(resolvedPath, fileName);
-
-      // Write to file
-      await fs.promises.writeFile(output, cssBreakpoints);
-      console.log("File created");
-    } else {
-      console.log("Directory does not exist");
+  if (isNode) {
+    // Node.js environment
+    createNodeFile(fullPath);
+  } else if (isBrowser) {
+    // Browser environment
+    try {
+      const blob = new Blob([cssBreakpoints], { type: 'text/css' });
+      // Save the file with the specified filename
+      saveAs(blob, fileName);
+    } catch (error) {
+      console.log(error);
     }
-  } catch (error) {
-    console.error("Error checking directory:", error);
+  } else {
+    throw new Error("Unsupported environment");
   }
 };
